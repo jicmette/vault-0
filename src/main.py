@@ -1,5 +1,9 @@
 import db
 import schema
+import auth
+import sys
+import getpass
+import seed
 
 def main():
   conn = db.get_db_connection()
@@ -12,11 +16,69 @@ def main():
       schema.create_tables(cursor)
       conn.commit()
     print("✅ Vault 0 is Online")
-
   except Exception as e:
     print(f"❌ Error initializing system: {e}")
-    conn.rollback()
-  finally:
+
+  current_user = None
+
+  while True:
+    if current_user is None:
+      print("\n=== 🔒 VAULT 0: SECURE LOGIN ===")
+      print("[1] Login")
+      print("[2] Register New Client")
+      print("[3] Exit")
+      print("[9] RESET & SEED DATA (Dev Only)")
+
+      choice = input("Select an option: ")
+
+      if choice == '1':
+        print("\n=== LOGIN ===")
+        email = input("Email: ")
+        password = getpass.getpass("Password: ")
+        with conn.cursor() as cursor:
+          user = auth.login(cursor, email, password)
+        if user:
+          print(f"✅ Welcome back, {user['name']}!")
+          current_user = user
+        else:
+          print("❌ Invalid email or password.")
+      elif choice == '2':
+        print("\n=== NEW CLIENT REGISTRATION ===")
+        name = input("Full Name: ")
+        email = input("Email: ")
+        password = getpass.getpass("Password: ")
+        with conn.cursor() as cursor:
+          new_id = auth.create_client(cursor, name, email, password)
+          conn.commit()
+        if new_id:
+          print("✅ Registration successful! Please log in.")
+      elif choice == '3':
+        print("👋 Goodbye!")
+        break
+      elif choice == '9':
+        confirm = input("⚠️ WARNING: This will wipe the database. Type 'yes' to confirm: ")
+        if confirm == 'yes':
+          with conn.cursor() as cursor:
+            cursor.execute("DROP TABLE IF EXISTS entries CASCADE;")
+            cursor.execute("DROP TABLE IF EXISTS transactions CASCADE;")
+            cursor.execute("DROP TABLE IF EXISTS accounts CASCADE;")
+            cursor.execute("DROP TABLE IF EXISTS clients CASCADE;")
+
+            schema.create_tables(cursor)
+            seed.run(cursor)
+            conn.commit()
+            print("♻️ Database Reset & Seeded successfully.")
+
+    else:
+      print(f"\n=== 🔓 VAULT 0 DASHBOARD ({current_user['name']}) ===")
+      print("[1] Log Out")
+
+      choice = input("Select: ")
+      if choice == '1':
+        print("✅ You logged out.")
+        current_user = None
+
+  if conn:
     conn.close()
 
 if __name__ == "__main__":
