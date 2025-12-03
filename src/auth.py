@@ -14,6 +14,7 @@ def create_client(cursor, name, email, password):
 
     new_id = cursor.fetchone()[0]
     print(f"✅ The Client '{name}' registered successfully (ID: {new_id}).")
+    return new_id
 
   except Exception as e:
     print(f"❌ Error creating client: {e}")
