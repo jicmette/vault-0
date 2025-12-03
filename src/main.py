@@ -48,11 +48,21 @@ def main():
         name = input("Full Name: ")
         email = input("Email: ")
         password = getpass.getpass("Password: ")
-        with conn.cursor() as cursor:
-          new_id = auth.create_client(cursor, name, email, password)
-          conn.commit()
-        if new_id:
-          print("✅ Registration successful! Please log in.")
+        try:
+          with conn.cursor() as cursor:
+            new_id = auth.create_client(cursor, name, email, password)
+            if new_id:
+              cursor.execute("""
+                INSERT INTO accounts (client_id, name, type, balance)
+                VALUES (%s, %s, 'Liability', 0.00);
+              """, (new_id, f"{name} Checking"))
+              conn.commit()
+              print(f"✅ Registration successful! Created 'Checking Account for {name}")
+            else:
+              print("❌ Registration failed.")
+        except Exception as e:
+          print(f"❌ Error during registration: {e}")
+          if conn: conn.rollback()
       elif choice == '3':
         print("👋 Goodbye!")
         break
