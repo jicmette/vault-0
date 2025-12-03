@@ -35,7 +35,7 @@ def create_tables(cursor):
   cursor.execute("""
   CREATE TABLE IF NOT EXISTS entries (
     id SERIAL PRIMARY KEY,
-    transactions_id INTEGER REFERENCES transactions(id) ON DELETE CASCADE,
+    transaction_id INTEGER REFERENCES transactions(id) ON DELETE CASCADE,
     account_id INTEGER REFERENCES accounts(id) ON DELETE CASCADE,
     amount DECIMAL (15, 2) NOT NULL
   );
