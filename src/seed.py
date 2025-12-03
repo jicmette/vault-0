@@ -32,13 +32,13 @@ def run(cursor):
   alice_id = auth.create_client(cursor, "Alice Anderson", "alice@test.com", "alice123")
   cursor.execute("""
     INSERT INTO accounts (client_id, name, type, balance)
-    VALUES (%s, %s, 'Liability', 5000.00);
+    VALUES (%s, %s, 'Liability', -5000.00);
     """, (alice_id, 'Alice Checking'))
 
   bob_id = auth.create_client(cursor, "Bob Builder", "bob@test.com", "bob123")
   cursor.execute("""
     INSERT INTO accounts (client_id, name, type, balance)
-    VALUES (%s, %s, 'Liability', 150.00);
+    VALUES (%s, %s, 'Liability', -150.00);
     """, (bob_id, "Bob Savings"))
 
   print(f"✅ Customers Created: Alice, Bob)")
