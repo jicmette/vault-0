@@ -64,7 +64,7 @@ pip install -r requirements.txt
 python src/main.py
 ```
 
-**Developer Note** Select Option `[9]` (RESET & SEED DATA) in the main menu to wipe the database and populate it with test users and correct accounting balances.
+**Developer Note:** Select Option `[9]` (RESET & SEED DATA) in the main menu to wipe the database and populate it with test users and correct accounting balances.
 
 ## 🛠️ Usage Guide
 Once the application is running and seeded, you can log in with the test credentials: Test User (Customer)
