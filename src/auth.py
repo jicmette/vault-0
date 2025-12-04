@@ -42,7 +42,3 @@ def login(cursor, email, password):
   except Exception as e:
     print(f"❌ Error during login {e}")
     return None
-
-
-
-

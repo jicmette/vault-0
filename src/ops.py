@@ -44,7 +44,20 @@ def withdraw(cursor, account_id, amount):
 
   return ledger.post_transaction(cursor, "Withdrawal", entries)
 
+def get_history(cursor, account_id):
+  cursor.execute("""
+    SELECT
+      t.date,
+      t.description,
+      e.amount
+    FROM entries e
+    JOIN transactions t ON e.transaction_id = t.id
+    WHERE e.account_id = %s
+    ORDER BY t.id DESC
+    LIMIT 10;
+    """, (account_id,))
 
+  return cursor.fetchall()
 
 
 

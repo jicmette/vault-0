@@ -5,6 +5,7 @@ import sys
 import getpass
 import seed
 import ops
+from tabulate import tabulate
 
 def main():
   conn = db.get_db_connection()
@@ -101,7 +102,8 @@ def main():
       print("--------------------------------")
       print("[1] Deposit")
       print("[2] Withdraw")
-      print("[3] Log Out")
+      print("[3] History")
+      print("[4] Log Out")
 
       choice = input("Select: ")
 
@@ -130,6 +132,27 @@ def main():
             print("✅ Withdrawal Successful!")
 
         elif choice == '3':
+          if not account_id:
+            print("❌ No account found.")
+            continue
+
+          with conn.cursor() as cursor:
+            raw_history = ops.get_history(cursor, account_id)
+            clean_history = []
+            for row in raw_history:
+              date = row[0]
+              desc = row[1]
+              amount = -row[2]
+              clean_history.append([date, desc, amount])
+          print("\n📃 TRANSACTION HISTORY (Last 10)")
+
+          if not clean_history:
+            print("No transactions found.")
+          else: print(tabulate(clean_history, headers=["Date", "Description", "Amount"], tablefmt="psql", floatfmt=".2f"))
+
+          input("\nPress Enter to continue...")
+
+        elif choice == '4':
           print("✅ You logged out.")
           current_user = None
 
