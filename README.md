@@ -1,92 +1,33 @@
-# Vault 0: Core Banking Ledger
+## Module 3: SQL Relational Databases
 
-**A secure, double-entry banking ledger system built with Python and PostgreSQL.**
+### Overview
+The purpose of this module was to step away from "Backend-as-a-Service" solutions and build a **custom backend infrastructure** from scratch. I focused on mastering **SQL**, **Relational Design**, and **ACID compliance** by simulating a real-world double-entry banking ledger.
 
-This project simulates the core backend of a bank, handling multi-user accounts, ACID-compliant financial transactions, and real-time balance sheet reporting. It enforces strict accounting rules where every transaction must balance (`Sum(Entries) == 0`).
+**Key Features Implemented:**
+1.  **Relational Data Modeling:** Designed a normalized PostgreSQL schema linking `Clients` → `Accounts` → `Entries` → `Transactions` to ensure data integrity.
+2.  **ACID Transactions:** Implemented atomic transactions (`BEGIN`/`COMMIT`/`ROLLBACK`) in Python to guarantee that money is never lost or created if a step fails.
+3.  **Double-Entry Logic:** Enforced strict accounting rules where every financial movement is balanced by equal debits and credits ($Assets - Liabilities = 0$).
+4.  **Complex SQL Queries:**
+    * **Joins:** Merged `entries` and `transactions` tables to generate detailed user history reports.
+    * **Aggregates & Filtering:** Used `SUM()`, `COUNT()`, and `DATE` filtering to calculate rolling 30-day financial statistics.
+5.  **Containerization:** Dockerized the PostgreSQL database to create a reproducible, isolated development environment.
 
 [Software Demo Video - Module 3](https://www.youtube.com/watch?v=7pAjcS2mNkY)
 
-## 🚀 Features
-
-* **Double-Entry Logic:** Every transaction requires balanced debits and credits. Money cannot be created or destroyed, only moved.
-* **ACID Compliance:** Uses PostgreSQL transactions (`BEGIN`/`COMMIT`/`ROLLBACK`) to ensure data integrity. If one step fails, the entire transaction is reverted.
-* **Financial Reporting:** "Bank Statement" generation using SQL `JOIN`s to merge transaction headers with line-item entries.
-* **Financial Analytics:** Provides real-time aggregation of user activity, calculating net movement and transaction counts over rolling 30-day windows.
-* **Secure Authentication:** User passwords are hashed and salted using `bcrypt` before storage.
-* **CLI Interface:** A robust interactive menu for user registration, deposits, withdrawals, and history viewing.
-* **Dockerized Infrastructure:** The database runs in an isolated Docker container for a reproducible environment.
-
-## 🛠️ Tech Stack
-
+### Development Environment (Module 3)
 * **Language:** Python 3.10+
-* **Database:** PostgreSQL 15
-* **Infrastructure:** Docker & Docker Compose
-* **Libraries:**
-    * `psycopg2-binary` Raw SQL execution and connection management.
-    * `python-dotenv` Configuration management.
-    * `bcrypt` Cryptographic password security.
-    * `tabulate` Professional data formatting for terminal output.
+* **Database:** PostgreSQL 15 (Dockerized)
+* **Key Libraries:**
+    * `psycopg2-binary` (Database Adapter)
+    * `bcrypt` (Password Hashing/Security)
+    * `tabulate` (CLI Data Formatting)
+* **Architecture:** MVC-style separation (Database Layer → Operations Logic → CLI Frontend)
+* **Tools:** Docker Desktop, Git/GitHub
 
-## ⚙️ Setup & Installation
-### 1. Prerequisites
-Ensure you have the following installed:
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-* [Python 3.x](https://www.python.org/downloads/)
-* Git
+## Useful Websites
 
-### 2. Clone the Repository
-```bash
-git clone https://github.com/jicmette/vault-0
-cd vault-0
-```
-
-### 3. Set up the Database
-```bash
-docker-compose up -d
-```
-
-### 4. Configure Python Environment
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate it (Windows - Git Bash)
-source venv/Scripts/activate
-# OR (Windows - CMD / PowerShell)
-.\venv\Scripts\activate
-
-# Activate it (Mac/Linux)
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 5. Initialize the System
-```bash
-python src/main.py
-```
-
-**Developer Note:** Select Option `[9]` (RESET & SEED DATA) in the main menu to wipe the database and populate it with test users and correct accounting balances.
-
-## 🛠️ Usage Guide
-Once the application is running and seeded, you can log in with the test credentials: Test User (Customer)
-* **Email:** `alice@test.com`
-* **Password:** `alice123`
-* **Role:** Can deposit, withdraw, and view personal transaction history.
-
-## 🧠 The Accounting Logic
-This system does not simply add numbers to a `balance` column. It follows the Accounting Equation:
-
-$$Assets = Liabilities + Equity$$
-
-**How Vault 0 Handles Money:** To ensure the mathematical rule $\sum(Entries) = 0$ is always true:
-
-1. **Vault Cash** is an **Asset** (Positive Balance).
-2. **Customer Accounts** are **Liabilities** (Negative Balance).
-   Why? Because when you deposit money, the bank owes it back to you.
-
-**Display Logic:** The CLI flips the sign for the user.
-
-* **Database stores:** `-5,000.00`
-* **User sees:** `$5,000.00`
+* [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+* [Docker "Get Started" Guide](https://docs.docker.com/get-started/)
+* [Psycopg2 Documentation](https://www.psycopg.org/docs/)
+* [Python `tabulate` Library](https://pypi.org/project/tabulate/)
+* [Double-Entry Bookkeeping Guide](https://en.wikipedia.org/wiki/Double-entry_bookkeeping)
