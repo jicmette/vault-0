@@ -103,7 +103,8 @@ def main():
       print("[1] Deposit")
       print("[2] Withdraw")
       print("[3] History")
-      print("[4] Log Out")
+      print("[4] Monthly Stats")
+      print("[5] Log Out")
 
       choice = input("Select: ")
 
@@ -153,6 +154,21 @@ def main():
           input("\nPress Enter to continue...")
 
         elif choice == '4':
+          if not account_id:
+            print("❌ No account found.")
+            continue
+          with conn.cursor() as cursor:
+            stats = ops.get_monthly_stats(cursor, account_id)
+            count = stats[0]
+            raw_total = stats[1]
+            total = -raw_total if raw_total is not None else 0.00
+
+          print(f"\n📊 LAST 30 DAYS ACTIVITY")
+          print(f"Total Transactions: {count}")
+          print(f"Net Movement: ${total:,.2f}")
+          input("\nPress Enter to continue...")
+
+        elif choice == '5':
           print("✅ You logged out.")
           current_user = None
 

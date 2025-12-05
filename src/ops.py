@@ -20,7 +20,6 @@ def deposit(cursor, account_id, amount):
     (vault_id, amount),
     (account_id, -amount)
   ]
-
   return ledger.post_transaction(cursor, "Deposit", entries)
 
 def withdraw(cursor, account_id, amount):
@@ -41,7 +40,6 @@ def withdraw(cursor, account_id, amount):
     (vault_id, -amount),
     (account_id, amount)
   ]
-
   return ledger.post_transaction(cursor, "Withdrawal", entries)
 
 def get_history(cursor, account_id):
@@ -56,8 +54,19 @@ def get_history(cursor, account_id):
     ORDER BY t.id DESC
     LIMIT 10;
     """, (account_id,))
-
   return cursor.fetchall()
+
+def get_monthly_stats(cursor, account_id):
+  cursor.execute("""
+  SELECT
+    COUNT(t.id),
+    SUM(e.amount)
+  FROM entries e
+  JOIN transactions t ON e.transaction_id = t.id
+  WHERE e.account_id = %s
+  AND t.date > CURRENT_DATE - INTERVAL '30 days';
+  """, (account_id,))
+  return cursor.fetchone()
 
 
 
