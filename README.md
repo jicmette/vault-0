@@ -11,6 +11,7 @@ This project simulates the core backend of a bank, handling multi-user accounts,
 * **Double-Entry Logic:** Every transaction requires balanced debits and credits. Money cannot be created or destroyed, only moved.
 * **ACID Compliance:** Uses PostgreSQL transactions (`BEGIN`/`COMMIT`/`ROLLBACK`) to ensure data integrity. If one step fails, the entire transaction is reverted.
 * **Financial Reporting:** "Bank Statement" generation using SQL `JOIN`s to merge transaction headers with line-item entries.
+* **Financial Analytics:** Provides real-time aggregation of user activity, calculating net movement and transaction counts over rolling 30-day windows.
 * **Secure Authentication:** User passwords are hashed and salted using `bcrypt` before storage.
 * **CLI Interface:** A robust interactive menu for user registration, deposits, withdrawals, and history viewing.
 * **Dockerized Infrastructure:** The database runs in an isolated Docker container for a reproducible environment.
