@@ -4,6 +4,8 @@
 
 This project simulates the core backend of a bank, handling multi-user accounts, ACID-compliant financial transactions, and real-time balance sheet reporting. It enforces strict accounting rules where every transaction must balance (`Sum(Entries) == 0`).
 
+[Software Demo Video - Module 3](https://www.youtube.com/watch?v=7pAjcS2mNkY)
+
 ## 🚀 Features
 
 * **Double-Entry Logic:** Every transaction requires balanced debits and credits. Money cannot be created or destroyed, only moved.
